@@ -1,7 +1,6 @@
 package com.algaworks.algalog.domain.model;
 
 import java.time.OffsetDateTime;
-
 import jakarta.persistence.Entity;
 import jakarta.persistence.GeneratedValue;
 import jakarta.persistence.GenerationType;

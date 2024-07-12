@@ -2,7 +2,6 @@ package com.algaworks.algalog.api.assembler;
 
 import java.util.List;
 import java.util.stream.Collectors;
-
 import org.modelmapper.ModelMapper;
 import org.springframework.stereotype.Component;
 import com.algaworks.algalog.api.model.OcorrenciaModel;

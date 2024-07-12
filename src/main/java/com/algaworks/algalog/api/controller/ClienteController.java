@@ -15,31 +15,39 @@ import org.springframework.web.bind.annotation.RestController;
 import com.algaworks.algalog.domain.model.Cliente;
 import com.algaworks.algalog.domain.repository.ClienteRepository;
 import com.algaworks.algalog.domain.service.CatalogoClienteService;
-
 import jakarta.validation.Valid;
-import lombok.AllArgsConstructor;
+import lombok.extern.slf4j.Slf4j;
 
-@AllArgsConstructor
 @RestController
 @RequestMapping("/clientes")
+@Slf4j
 public class ClienteController {
+
+	public ClienteController(ClienteRepository clienteRepository, CatalogoClienteService catalogoClienteService) {
+		super();
+		this.clienteRepository = clienteRepository;
+		this.catalogoClienteService = catalogoClienteService;
+	}
 
 	private ClienteRepository clienteRepository;
 	private CatalogoClienteService catalogoClienteService;
 
 	@GetMapping
 	public List<Cliente> listar() {
+		log.warn("Listando clientes");
 		return catalogoClienteService.listarClientes();
 	}
 
 	@GetMapping("/{clienteId}")
 	public Cliente buscar(@PathVariable Long clienteId) {
+		log.info("Buscando clientes...");
 		return catalogoClienteService.pesquisar(clienteId);
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
 	@PostMapping
 	public Cliente adicionar(@Valid @RequestBody Cliente cliente) {
+		log.info("Salvando cliente: " + cliente);
 		return catalogoClienteService.salvar(cliente);
 	}
 
