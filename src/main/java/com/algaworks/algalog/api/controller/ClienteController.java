@@ -12,6 +12,7 @@ import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.ResponseStatus;
 import org.springframework.web.bind.annotation.RestController;
+import com.algaworks.algalog.api.model.ClienteEntregaDTO;
 import com.algaworks.algalog.domain.model.Cliente;
 import com.algaworks.algalog.domain.repository.ClienteRepository;
 import com.algaworks.algalog.domain.service.CatalogoClienteService;
@@ -72,6 +73,16 @@ public class ClienteController {
 		catalogoClienteService.excluir(clienteId);
 
 		return ResponseEntity.noContent().build();
+	}
+
+	@GetMapping("/busca/{nome}")
+	public List<Cliente> buscaNome(@PathVariable String nome) {
+		return catalogoClienteService.buscaPorNome(nome);
+	}
+
+	@GetMapping("/byEntregas/{clienteId}")
+	public List<ClienteEntregaDTO> buscaEntregas(@PathVariable Long clienteId) {
+		return catalogoClienteService.listaEntregas(clienteId);
 	}
 
 }

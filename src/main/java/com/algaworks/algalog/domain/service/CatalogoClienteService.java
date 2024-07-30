@@ -4,6 +4,8 @@ import java.util.List;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 import org.springframework.transaction.annotation.Transactional;
+import com.algaworks.algalog.api.assembler.ClienteEntregaAssembler;
+import com.algaworks.algalog.api.model.ClienteEntregaDTO;
 import com.algaworks.algalog.domain.exception.NegocioException;
 import com.algaworks.algalog.domain.model.Cliente;
 import com.algaworks.algalog.domain.repository.ClienteRepository;
@@ -15,7 +17,13 @@ import lombok.extern.slf4j.Slf4j;
 public class CatalogoClienteService {
 
 	@Autowired
+	private ClienteEntregaAssembler clienteEntregaAssembler;
+
+	@Autowired
 	private ClienteRepository clienteRepository;
+
+	@Autowired
+	private BuscaEntregaService buscaEntregaService;
 
 	@Transactional
 	public Cliente salvar(Cliente cliente) {
@@ -35,6 +43,10 @@ public class CatalogoClienteService {
 
 	@Transactional
 	public void excluir(Long clienteId) {
+		if (buscaEntregaService.verificaEntrega(clienteId)) {
+			throw new NegocioException("Erro! existe uma entrega para esse cliente");
+		}
+
 		try {
 			clienteRepository.deleteById(clienteId);
 			log.info("Cliente excluído: " + clienteId);
@@ -58,26 +70,13 @@ public class CatalogoClienteService {
 		}
 		return true;
 	}
-	
-//	@Override
-//	protected ResponseEntity<Object> handleMethodArgumentNotValid(MethodArgumentNotValidException ex,
-//			HttpHeaders headers, HttpStatusCode status, WebRequest request) {
-//		List<Campo> campos = new ArrayList<>();
-//
-//		for (ObjectError error : ex.getBindingResult().getAllErrors()) {
-//			String nome = ((FieldError) error).getField();
-//			String mensagem = messageSource.getMessage(error, LocaleContextHolder.getLocale());
-//
-//			campos.add(new Campo(nome, mensagem));
-//		}
-//
-//		Problema problema = new Problema();
-//		problema.setStatus(status.value());
-//		problema.setDataHora(OffsetDateTime.now());
-//		problema.setTitulo("Um ou mais campos estão inválidos. Faça o preenchimento correto e tente novamente.");
-//		problema.setCampos(campos);
-//
-//		return handleExceptionInternal(ex, problema, headers, status, request);
-//	}
+
+	public List<Cliente> buscaPorNome(String nome) {
+		return clienteRepository.findByNomeContaining(nome);
+	}
+
+	public List<ClienteEntregaDTO> listaEntregas(long clienteId) {
+		return clienteEntregaAssembler.toCollectionModel(buscaEntregaService.buscaPorCliente(clienteId));
+	}
 
 }

@@ -5,9 +5,8 @@ import lombok.Setter;
 
 @Getter
 @Setter
-public class ClienteResumoModel {
-	
-	private long clienteId;
+public class DestinatarioResumoDTO {
+
 	private String nome;
 
 }

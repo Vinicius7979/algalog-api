@@ -3,6 +3,7 @@ package com.algaworks.algalog.api.controller;
 import java.util.List;
 import org.springframework.http.HttpStatus;
 import org.springframework.http.ResponseEntity;
+import org.springframework.web.bind.annotation.DeleteMapping;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.PathVariable;
 import org.springframework.web.bind.annotation.PostMapping;
@@ -16,6 +17,7 @@ import com.algaworks.algalog.api.model.EntregaModel;
 import com.algaworks.algalog.api.model.input.EntregaInput;
 import com.algaworks.algalog.domain.model.Entrega;
 import com.algaworks.algalog.domain.repository.EntregaRepository;
+import com.algaworks.algalog.domain.service.ExcluiEntregaService;
 import com.algaworks.algalog.domain.service.FinalizacaoEntregaService;
 import com.algaworks.algalog.domain.service.SolicitacaoEntregaService;
 import jakarta.validation.Valid;
@@ -28,14 +30,16 @@ public class EntregaController {
 	private SolicitacaoEntregaService solicitacaoEntregaService;
 	private EntregaAssembler entregaAssembler;
 	private FinalizacaoEntregaService finalizacaoEntregaService;
+	private ExcluiEntregaService excluiEntregaService;
 
-	public EntregaController(FinalizacaoEntregaService finalizacaoEntregaService, EntregaRepository entregaRepository,
+	public EntregaController(ExcluiEntregaService excluiEntregaService, FinalizacaoEntregaService finalizacaoEntregaService, EntregaRepository entregaRepository,
 			SolicitacaoEntregaService solicitacaoEntregaService, EntregaAssembler entregaAssembler) {
 		super();
 		this.entregaRepository = entregaRepository;
 		this.solicitacaoEntregaService = solicitacaoEntregaService;
 		this.entregaAssembler = entregaAssembler;
 		this.finalizacaoEntregaService = finalizacaoEntregaService;
+		this.excluiEntregaService = excluiEntregaService;
 	}
 
 	@ResponseStatus(HttpStatus.CREATED)
@@ -63,6 +67,11 @@ public class EntregaController {
 	@ResponseStatus(HttpStatus.NO_CONTENT)
 	public void finalizar(@PathVariable Long entregaId) {
 		finalizacaoEntregaService.finalizar(entregaId);
+	}
+	
+	@DeleteMapping("/{id}")
+	public void deleteEntrega(@PathVariable Long id) {
+		excluiEntregaService.excluiEntrega(id);
 	}
 
 }

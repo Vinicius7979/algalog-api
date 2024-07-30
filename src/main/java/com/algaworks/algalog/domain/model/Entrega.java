@@ -62,7 +62,7 @@ public class Entrega {
 	}
 
 	public void finalizar() {
-		if (naoPodeSerFinalizada()) {
+		if (!podeSerFinalizada()) {
 			throw new NegocioException("Entrega não pode ser finalizada");
 		}
 
@@ -72,10 +72,6 @@ public class Entrega {
 
 	public boolean podeSerFinalizada() {
 		return StatusEntrega.PENDENTE.equals(getStatus());
-	}
-
-	public boolean naoPodeSerFinalizada() {
-		return !podeSerFinalizada();
 	}
 
 }
